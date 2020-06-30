@@ -32,29 +32,28 @@ print('The shape of training label is', train_lbl.shape)
 print('The shape of test image is', test_img.shape)
 print('The shape of test label is', test_lbl.shape)
 
-# === Standardizing the Data ===
-
+# Standardizing the Data 
 from sklearn.preprocessing import StandardScaler
 
 scaler = StandardScaler()
 
-# === Fitting === 
+# Fitting 
 scaler.fit(train_img)
 
-# === transformation ===
+# Transformation 
 train_img = scaler.transform(train_img)
 test_img = scaler.transform(test_img)
 
-# === PCA ===
+# PCA 
 from sklearn.decomposition import PCA
 
-# Make an instance of the Model
+# Make an instance of the Model 
 pca = PCA(.95)
 
 # Fitting PCA on training set
 pca.fit(train_img)
 
-# Number of components PCA choose after fitting the model
+# Number of components PCA choose after fitting the model 
 print('Number of components after fitting is:')
 print(pca.n_components_)
 
@@ -62,7 +61,23 @@ print(pca.n_components_)
 train_img = pca.transform(train_img)
 test_img = pca.transform(test_img)
 
-# === Apply Logistic Regression to the Transformed Data ===
+# ====================================================
+# Applying Logistic Regression to the Transformed Data
+# ====================================================
 
+from sklearn.linear_model import LogisticRegression
 
+logisticRegr = LogisticRegression(solver = 'lbfgs')
+
+logisticRegr.fit(train_img, train_lbl)
+
+# Predict for One Observation (image)
+logisticRegr.predict(test_img[0].reshape(1,-1))
+
+# Predict for Multiple Observations (images) at Once
+logisticRegr.predict(test_img[0:10])
+
+# Performance of the model
+score = logisticRegr.score(test_img, test_lbl)
+print(score)
 
